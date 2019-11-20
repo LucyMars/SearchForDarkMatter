@@ -2,13 +2,11 @@ import glob
 import numpy as np
 import os.path as path
 import imageio
-#from scipy import misc
 import matplotlib.pyplot as plt
 from keras.models import Sequential
 from keras.layers import Activation, Dropout, Flatten, Dense, Conv2D, MaxPooling2D
 from keras.callbacks import EarlyStopping, TensorBoard
 from datetime import datetime
-#from PIL import Image
 import keras
 from keras import regularizers
 from sklearn.model_selection import train_test_split
@@ -16,16 +14,10 @@ import pandas as pd
 from sklearn.metrics import accuracy_score, f1_score, average_precision_score, precision_recall_curve, auc,recall_score
 from keras.regularizers import l2
 
-
-# Run Peak 20,000 images 1cl_40ep_100bs
-
-
-#IMAGE_PATH = 'C:/Data/NewData/HitPeakScaled150'
-#IMAGE_PATH = 'F:/NewData/Both1/Cropped/Scaled150_150'
-
-IMAGE_PATH = 'F:/NewData/20000_75x75'
-#IMAGE_PATH = 'F:/NewData/Peak/Scaled100_50'
-#IMAGE_PATH = 'F:/NewData/Hit/Scaled100x50'
+# Define image path (e.g.)
+IMAGE_PATH = 'D:/Data/HitPeak'
+#IMAGE_PATH = 'D:/Data/Peak'
+#IMAGE_PATH = 'D:/Data/Hit'
 
 file_paths = glob.glob(path.join(IMAGE_PATH, '*.png'))
 
@@ -54,7 +46,7 @@ for i in range(n_images):
 # WIMPS = 1 = TRUE
 
 # Split into test and training sets
-TRAIN_TEST_SPLIT = 0.9             #<-- confusion matrix needs equal number of input 
+TRAIN_TEST_SPLIT = 0.9             
 
 # Split at the given index
 split_index = int(TRAIN_TEST_SPLIT * n_images)
@@ -74,10 +66,10 @@ x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.
 
 #====================================================================================================
 
-#Convolutional Neural Network
+# Convolutional Neural Network
 
 # Hyperparamater - how many convolutional layers the CNN has
-N_LAYERS = 2   #########
+N_LAYERS = 2   
 
 def cnn(size, n_layers):
     # INPUTS
@@ -88,13 +80,7 @@ def cnn(size, n_layers):
     # Define hyperparamters
     MIN_NEURONS = 20
     #MAX_NEURONS = 100
-    KERNEL = (3, 3)
-
-    # Determine the # of neurons in each convolutional layer
-    #steps = np.floor(MAX_NEURONS / (n_layers + 1))
-    #nuerons = np.arange(MIN_NEURONS, MAX_NEURONS, steps)
-    #nuerons = nuerons.astype(np.int32)
-    #nuerons = [20,40,60,80]    
+    KERNEL = (3, 3) 
     nuerons = [20,20,20,20]    
 
     # Define a model
@@ -134,26 +120,24 @@ def cnn(size, n_layers):
 
     return model
 
-
 model = cnn(size=image_size, n_layers=N_LAYERS)
 
 # Training hyperparamters
-EPOCHS = 40        #########
+EPOCHS = 40        
 BATCH_SIZE = 100
 
 # Early stopping callback
 PATIENCE = 10
 early_stopping = EarlyStopping(monitor='loss', min_delta=0, patience=PATIENCE, verbose=1, mode='auto')
-'''
+
+# Tensorboard
 LOG_DIRECTORY_ROOT = ''
 now = datetime.utcnow().strftime("%Y%m%d%H%M%S")    
-log_dir = "{}/HitScaled100x50-20000_2cl_40ep_100bs-20n-Final-{}/".format(LOG_DIRECTORY_ROOT, now)  
-#log_dir = "{}/HitPeakScaled75x75-20000_2cl_40ep_100bs-20n-Final-{}/".format(LOG_DIRECTORY_ROOT, now)        
+log_dir = "{}/HitPeak-20000_2cl_40ep_100bs-{}/".format(LOG_DIRECTORY_ROOT, now)  
 tensorboard = TensorBoard(log_dir=log_dir, write_graph=True, write_images=True, write_grads=True,histogram_freq=1)
 callbacks = [early_stopping, tensorboard]
-'''
-callbacks = [early_stopping]
 
+# Plotting/Printing Results
 Fit = model.fit(x_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, callbacks=callbacks, verbose=1 , validation_data=(x_val, y_val))
 score = model.evaluate(x_test, y_test, verbose=1)
 print('Test loss:', score[0])
@@ -168,14 +152,15 @@ plt.plot(epochs, accuracy, 'bo', label='Training acuracy')
 plt.plot(epochs, val_accuracy, 'b', label='Validation accuracy')
 plt.title('Training and validation accuracy')
 plt.legend()
-#plt.savefig('F:/NewData/20000_75x75/Results/Layers/Same/Accuracy.png')
+#plt.savefig('Accuracy.png')
 plt.figure()
 plt.plot(epochs, loss, 'bo', label='Training loss')
 plt.plot(epochs, val_loss, 'b', label='Validation loss')
 plt.title('Training and validation loss')
 plt.legend()
-#plt.savefig('F:/NewData/20000_75x75/Results/Layers/Same/Loss.png')
+#plt.savefig('Loss.png')
 plt.show()
+
 # Make a prediction on the test set
 test_predictions = model.predict(x_test)
 #print (test_predictions)
@@ -189,13 +174,11 @@ print("Accuracy: " + str(accuracy))
 average_precision = average_precision_score(y_test, test_predictions)
 print("Average precision: " + str(average_precision))
 
-
 precision, recall, thresholds = precision_recall_curve(y_test, test_predictions)
 auc = auc(recall, precision)
 recall1 = recall_score(y_test, np.round(test_predictions))
 print("recall: " + str(recall1))
 print('AUC:' +str(auc))
-
 
 #Report Confusion Matrix
 y_actu = pd.Series(y_test.ravel(), name='Actual')
@@ -235,9 +218,6 @@ def plot_roc_curve(fpr, tpr):
     #plt.savefig('F:/NewData/20000_75x75/Results/Layers/Same/ROCCurve.png')
     
 fpr, tpr, thresholds = roc_curve(y_test, test_predictions)
-#print("tpr =", tpr)
-#print("fpr =", fpr)
-
 np.savetxt("F:NewData/ROCCurve/tprHitPeak.txt",tpr)
 np.savetxt("F:NewData/ROCCurve/fprHitPeak.txt",fpr)
 plot_roc_curve(fpr, tpr)
