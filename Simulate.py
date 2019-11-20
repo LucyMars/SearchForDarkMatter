@@ -1,5 +1,8 @@
-# This file is adapted from the laidbax tutorial notebook - https://github.com/XENON1T/laidbax/blob/master/notebooks/Tutorial.ipynb
-# For a WIMP with mass 500 GeV/c^2 and cross section 1e-45
+"""
+This file is adapted from the laidbax tutorial notebook - https://github.com/XENON1T/laidbax/blob/master/notebooks/Tutorial.ipynb
+For a WIMP with mass 500 GeV/c^2 and cross section 1e-45
+"""
+
 import numpy as np
 import random
 import matplotlib.pyplot as plt
@@ -63,6 +66,7 @@ Anon = m2.sources[5]
 WIMP = m2.sources[6]
 #m2[3].simulate()
 
+# These values can be increased to generate more events
 ER_fake = ER.simulate(300)
 CNNS_fake = CNNS.simulate(10000)
 RN_fake = RN.simulate(350)
@@ -91,7 +95,7 @@ df =  pd.concat([df_ER, df_CNNS, df_RN, df_AC, df_Wall, df_Anon, df_WIMP])
 
 for i in range (0,7):
     print (df.loc[df.source == i, 'source'].count())
-'''
+
 m2.show(df)
 #m2.show(ER_fake)
 #m2.show(CNNS_fake)
@@ -102,6 +106,9 @@ m2.show(df)
 #m2.show(WIMP_fake)
 plt.legend(prop={'size': 6})
 #plt.show()
+
+
+# The following code produces a csv file for each type of background (ER, CNNs, RN, AC, Wall, Anon) and WIMP.
 
 df_ER['x'] =np.sqrt(df_ER.r2)*np.cos(df_ER.theta)
 df_ER['y'] =np.sqrt(df_ER.r2)*np.sin(df_ER.theta)
@@ -205,4 +212,3 @@ fake_WIMP = df_WIMP.drop(['z','source','energy','r2','theta','p_photon_detected'
 fakedWIMP = fake_WIMP[['instruction', 'recoil_type', 'x','y', 'depth', 'photons_produced', 'electrons_produced' ,'t']]
 fakedWIMP.columns=(['instruction', 'recoil_type', 'x','y', 'depth', 's1_photons', 's2_electrons' ,'t'])
 fakedWIMP.to_csv('~/Documents/XENON-ML/WIMPSIM.csv',index=False)
-'''
