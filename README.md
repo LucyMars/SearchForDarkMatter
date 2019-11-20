@@ -16,7 +16,7 @@ We tested three images:
 2. "Peak" - The largest S1 and S2 peaks (Plotting_Peak.py)
 3. "HitPeak" - An image that shows both hitpattern and peak data (Plotting_HitPeak.py)
 
-These three python files need to be saved in the pax plotting folder "~pax\pax\plugins\plotting" (see "Installation.md" to install PaX). To generate the images, the name of the file (e.g. Plotting_Hit.py) needs to be changed to Plotting.py.
+These three python files are edited versions of the PaX plotting file and need to be saved in the PaX plotting folder "~pax\pax\plugins\plotting" (see "Installation.md" to install PaX). To generate the images, the name of the file (e.g. Plotting_Hit.py) needs to be changed to Plotting.py.
 
 The main CNN we used is shown in CNN.py.
 
