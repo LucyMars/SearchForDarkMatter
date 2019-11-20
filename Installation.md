@@ -1,8 +1,7 @@
 This file outlines the installation process required to run this project. 
 The information is taken from the github repositories of XENON1T and Jelle Aalbers and is included here for convinence.
 
-PaX works best in either Linux or mac. I had to use a virtual machine to run Linux; the following website gives good instructions on how to install one:  
-https://brb.nci.nih.gov/seqtools/installUbuntu.html 
+PaX works best in either Linux or mac. 
 
 ## Setting Up PaX
 This section follows the Linux installation process suggested by the PAX github page - https://github.com/XENON1T/pax (the page also includes information for installing on a Mac).
