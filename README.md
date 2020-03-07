@@ -18,6 +18,6 @@ We tested three images:
 
 These three python files are edited versions of the PaX plotting file and need to be saved in the PaX plotting folder "~pax\pax\plugins\plotting" (see "Installation.md" to install PaX). To generate the images, the name of the file (e.g. Plotting_Hit.py) needs to be changed to Plotting.py.
 
-The main CNN we used is shown in CNN.py.
+The main CNN we used is shown in CNN.ipynb.
 
 Simulate.md describes how to simulate the data and run the CNN.
